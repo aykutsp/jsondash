@@ -11,7 +11,11 @@ Each stack can load a local JSON file, restore the shared sample dataset, infer 
 
 ## Preview
 
+The previews below were captured in Chrome against the local demos using the shared sample dataset.
+
 ![Angular Apex gallery preview](docs/assets/angular-apex-gallery.png)
+
+![React Apex gallery preview](docs/assets/react-apex-gallery.png)
 
 ## What You Get
 
@@ -114,6 +118,53 @@ Or start a specific stack directly:
 .\launch.ps1 -Stack WPF
 ```
 
+## Example JSON
+
+Use a structure like this when you want the automatic schema detection and chart generation to work well:
+
+The repo already includes a ready-to-load version of this idea in `shared/sample-data/sales.json`.
+
+```json
+{
+  "sales": [
+    {
+      "date": "2025-01-01",
+      "region": "EU",
+      "channel": "Direct",
+      "revenue": 1200,
+      "orders": 24,
+      "margin": 312
+    },
+    {
+      "date": "2025-01-02",
+      "region": "US",
+      "channel": "Partner",
+      "revenue": 1800,
+      "orders": 31,
+      "margin": 455
+    },
+    {
+      "date": "2025-01-03",
+      "region": "APAC",
+      "channel": "Direct",
+      "revenue": 1660,
+      "orders": 29,
+      "margin": 401
+    }
+  ]
+}
+```
+
+Top-level arrays also work:
+
+```json
+[
+  { "date": "2025-01-01", "region": "EU", "revenue": 1200, "orders": 24 },
+  { "date": "2025-01-02", "region": "US", "revenue": 1800, "orders": 31 },
+  { "date": "2025-01-03", "region": "APAC", "revenue": 1660, "orders": 29 }
+]
+```
+
 ## Run Each Stack Manually
 
 ### React
@@ -168,6 +219,54 @@ dotnet build
 dotnet run
 ```
 
+## Example Code
+
+### Launch a specific stack
+
+```powershell
+.\launch.ps1 -Stack Angular
+```
+
+### Fetch analyzed data from the Flask API
+
+```bash
+curl http://127.0.0.1:5000/api/dashboard
+```
+
+### Load a local file in React
+
+```tsx
+async function handleFile(file: File) {
+  const raw = await file.text();
+  const parsed = JSON.parse(raw);
+  setDashboard(analyzeJson(parsed));
+}
+```
+
+### Create an Apex chart config from analyzed metrics
+
+```ts
+const options = {
+  chart: { type: "line", height: 280 },
+  series: [
+    {
+      name: "Revenue",
+      data: [1200, 1800, 1660, 1940]
+    }
+  ],
+  xaxis: {
+    categories: ["2025-01-01", "2025-01-02", "2025-01-03", "2025-01-04"]
+  }
+};
+```
+
+### Start the Flask app with the local virtual environment
+
+```powershell
+cd .\flask
+.\.venv\Scripts\python.exe app.py
+```
+
 ## How To Use The App
 
 1. Launch the stack you want to explore.
@@ -186,6 +285,8 @@ The parser is flexible, but the smoothest path is:
 
 - A top-level array of objects
 - Or a top-level object containing one array of objects
+- Numeric fields for metrics and chart values
+- Category or date-like fields for grouping and trend views
 
 Examples that work well:
 
