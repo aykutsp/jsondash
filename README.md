@@ -2,12 +2,7 @@
 
 `jsondash` is a multi-stack analytics application that turns raw JSON into a structured, readable dashboard. The purpose of the project is to make JSON-based reporting easier: load a file, detect its shape automatically, summarize the important fields, and present the result through KPI cards, trend views, category breakdowns, and a broad chart library.
 
-This repository includes the same product implemented with the following technologies:
-
-- React with TypeScript
-- Angular with TypeScript
-- Flask with Python, HTML, CSS, and JavaScript
-- WPF with C# and XAML
+Technology stack: React + TypeScript, Angular + TypeScript, Flask + Python/HTML/CSS/JavaScript, WPF + C#/XAML.
 
 Each implementation can load a local JSON file, restore the shared sample dataset, infer schema automatically, surface KPI cards, summarize numeric metrics, render quick comparison charts, show a full ApexCharts gallery, and keep the source rows searchable in one screen.
 
