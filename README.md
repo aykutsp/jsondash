@@ -1,79 +1,86 @@
 # jsondash
 
-`jsondash` is a multi-stack analytics application that turns raw JSON into a structured, readable dashboard. The purpose of the project is to make JSON-based reporting easier: load a file, detect its shape automatically, summarize the important fields, and present the result through KPI cards, trend views, category breakdowns, and a broad chart library.
+[![License](https://img.shields.io/badge/license-MIT-1f6feb?style=for-the-badge)](LICENSE)
+[![Last Commit](https://img.shields.io/github/last-commit/aykutsp/jsondash?style=for-the-badge)](https://github.com/aykutsp/jsondash/commits/main)
+[![Platform](https://img.shields.io/badge/platform-Windows-0078D6?style=for-the-badge)](https://www.microsoft.com/windows)
+[![React](https://img.shields.io/badge/React-TypeScript-61DAFB?style=for-the-badge&logo=react&logoColor=black)](react)
+[![Angular](https://img.shields.io/badge/Angular-TypeScript-DD0031?style=for-the-badge&logo=angular&logoColor=white)](angular)
+[![Flask](https://img.shields.io/badge/Flask-Python%2FHTML%2FCSS%2FJavaScript-111111?style=for-the-badge&logo=flask&logoColor=white)](flask)
+[![WPF](https://img.shields.io/badge/WPF-C%23%2FXAML-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](wpf)
+[![Charts](https://img.shields.io/badge/charts-ApexCharts-F97316?style=for-the-badge)](https://apexcharts.com/)
 
-Technology stack: React + TypeScript, Angular + TypeScript, Flask + Python/HTML/CSS/JavaScript, WPF + C#/XAML.
+`jsondash` is a multi-stack analytics application that turns raw JSON into a structured dashboard. Its goal is simple: make JSON-based reporting easier to inspect, easier to share, and easier to ship across different platforms without changing the product idea.
 
-Each implementation can load a local JSON file, restore the shared sample dataset, infer schema automatically, surface KPI cards, summarize numeric metrics, render quick comparison charts, show a full ApexCharts gallery, and keep the source rows searchable in one screen.
+The same application is implemented in four stacks: React + TypeScript, Angular + TypeScript, Flask + Python/HTML/CSS/JavaScript, and WPF + C#/XAML. Each implementation can load local JSON files, infer schema automatically, generate KPI cards and summaries, render quick charts, display a full ApexCharts gallery, and keep source rows searchable in one screen.
+
+## Contents
+
+- [Preview](#preview)
+- [Why jsondash](#why-jsondash)
+- [Technology stack](#technology-stack)
+- [Features](#features)
+- [Quick start](#quick-start)
+- [Run each stack manually](#run-each-stack-manually)
+- [How to use the app](#how-to-use-the-app)
+- [Example JSON](#example-json)
+- [Example code](#example-code)
+- [JSON shape expectations](#json-shape-expectations)
+- [Project structure](#project-structure)
+- [Architecture notes](#architecture-notes)
+- [Verification](#verification)
+- [License](#license)
 
 ## Preview
 
-The previews below were captured in Chrome from local application runs using the shared sample dataset.
+The screenshots below were captured in Chrome from local application runs using the shared sample dataset.
 
 ![Angular Apex gallery preview](docs/assets/angular-apex-gallery.png)
 
 ![React Apex gallery preview](docs/assets/react-apex-gallery.png)
 
-## What You Get
+## Why jsondash
 
-- One analytics product implemented in four different stacks
-- A single launcher script for quick local switching
-- Shared sample data used by every implementation
-- Full chart-family coverage through the Apex gallery
-- A clean starting point for internal reporting tools, operational dashboards, and JSON-driven analytics work
+- Provide a single analytics product that works across web, server-rendered, and desktop environments.
+- Turn unfamiliar JSON into a readable operational dashboard in minutes.
+- Offer a practical starting point for internal reporting tools, analytics surfaces, and dashboard-driven products.
+- Make stack comparison easier when teams need to choose between React, Angular, Flask, or WPF.
 
-## Stacks
+## Technology Stack
 
-### React
-
-- Built with React + Vite
-- Uses `react-apexcharts` for the full gallery
-- Keeps the original lightweight dashboard flow alongside the larger chart showcase
-
-### Angular
-
-- Built with Angular standalone components
-- Uses `ng-apexcharts` + `apexcharts`
-- Includes the richest ApexCharts setup and a dedicated Angular start script
-
-### Flask
-
-- Server-rendered Flask app
-- Uses Chart.js for the fast summary panels
-- Uses ApexCharts in the browser for the full gallery section
-
-### WPF
-
-- Native Windows desktop app built with WPF
-- Keeps native KPI, summary, and table views
-- Embeds an Apex gallery surface inside the desktop window for full chart-family parity
+| Stack | Language(s) | Rendering model | Charting approach | Start command |
+| --- | --- | --- | --- | --- |
+| React | TypeScript | Client-side SPA | `react-apexcharts` | `.\launch.ps1 -Stack React` |
+| Angular | TypeScript | Client-side SPA | `ng-apexcharts` + `apexcharts` | `.\launch.ps1 -Stack Angular` |
+| Flask | Python, HTML, CSS, JavaScript | Server-rendered web app | ApexCharts in the browser | `.\launch.ps1 -Stack Flask` |
+| WPF | C#, XAML | Native Windows desktop app | Embedded Apex gallery via WebView2 | `.\launch.ps1 -Stack WPF` |
 
 ## Features
 
-- Load local JSON files directly from the UI
-- Restore the shared `sales.json` sample in one click
-- Detect numeric, categorical, and date fields automatically
-- Show KPI cards for dataset shape
-- Generate fast summary blocks for numeric columns
-- Render trend and breakdown panels from inferred fields
-- Render a complete Apex gallery:
-  - Line
-  - Area
-  - Bar
-  - Pie
-  - Donut
-  - Radial Bar
-  - Scatter
-  - Bubble
-  - Heatmap
-  - Candlestick
-  - Box Plot
-  - Radar
-  - Polar Area
-  - Range Bar
-  - Range Area
-  - Treemap
-- Search and inspect raw rows without leaving the page or window
+- Load local JSON files directly from the UI.
+- Restore the shared `sales.json` sample in one click.
+- Detect numeric, categorical, and date-like fields automatically.
+- Show KPI cards for dataset shape.
+- Generate numeric summaries with averages, minimums, and maximums.
+- Render trend and breakdown panels from inferred fields.
+- Render a complete ApexCharts gallery with line, area, bar, pie, donut, radial bar, scatter, bubble, heatmap, candlestick, box plot, radar, polar area, range bar, range area, and treemap views.
+- Search and inspect raw rows without leaving the page or window.
+
+## Quick Start
+
+Use the launcher to choose a stack interactively:
+
+```powershell
+.\launch.ps1
+```
+
+Or start a specific implementation directly:
+
+```powershell
+.\launch.ps1 -Stack React
+.\launch.ps1 -Stack Angular
+.\launch.ps1 -Stack Flask
+.\launch.ps1 -Stack WPF
+```
 
 ## Requirements
 
@@ -97,70 +104,6 @@ The previews below were captured in Chrome from local application runs using the
 - .NET SDK with Windows desktop support
 - Windows environment
 - WebView2 runtime available on the machine for the embedded Apex gallery
-
-## Quick Start
-
-Use the launcher to pick a stack interactively:
-
-```powershell
-.\launch.ps1
-```
-
-Or start a specific stack directly:
-
-```powershell
-.\launch.ps1 -Stack React
-.\launch.ps1 -Stack Angular
-.\launch.ps1 -Stack Flask
-.\launch.ps1 -Stack WPF
-```
-
-## Example JSON
-
-Use a structure like this when you want the automatic schema detection and chart generation to work well:
-
-The repo already includes a ready-to-load version of this idea in `shared/sample-data/sales.json`.
-
-```json
-{
-  "sales": [
-    {
-      "date": "2025-01-01",
-      "region": "EU",
-      "channel": "Direct",
-      "revenue": 1200,
-      "orders": 24,
-      "margin": 312
-    },
-    {
-      "date": "2025-01-02",
-      "region": "US",
-      "channel": "Partner",
-      "revenue": 1800,
-      "orders": 31,
-      "margin": 455
-    },
-    {
-      "date": "2025-01-03",
-      "region": "APAC",
-      "channel": "Direct",
-      "revenue": 1660,
-      "orders": 29,
-      "margin": 401
-    }
-  ]
-}
-```
-
-Top-level arrays also work:
-
-```json
-[
-  { "date": "2025-01-01", "region": "EU", "revenue": 1200, "orders": 24 },
-  { "date": "2025-01-02", "region": "US", "revenue": 1800, "orders": 31 },
-  { "date": "2025-01-03", "region": "APAC", "revenue": 1660, "orders": 29 }
-]
-```
 
 ## Run Each Stack Manually
 
@@ -216,6 +159,65 @@ dotnet build
 dotnet run
 ```
 
+## How To Use The App
+
+1. Launch the stack you want to explore.
+2. Click `Load sample` to open the shared sales dataset instantly.
+3. Click `Load JSON file` or `Open JSON file` to load your own file.
+4. Review the KPI cards to confirm row and field counts.
+5. Check the detected field tags to see how the parser classified your data.
+6. Read the numeric summary to understand averages, minimums, and maximums.
+7. Use the quick charts for a fast first pass.
+8. Scroll to the Apex gallery to explore the same data through multiple chart families.
+9. Use the search box in the data explorer to inspect matching rows.
+
+## Example JSON
+
+Use a structure like this when you want the automatic schema detection and chart generation to work well.
+
+The repository already includes a ready-to-load sample at `shared/sample-data/sales.json`.
+
+```json
+{
+  "sales": [
+    {
+      "date": "2025-01-01",
+      "region": "EU",
+      "channel": "Direct",
+      "revenue": 1200,
+      "orders": 24,
+      "margin": 312
+    },
+    {
+      "date": "2025-01-02",
+      "region": "US",
+      "channel": "Partner",
+      "revenue": 1800,
+      "orders": 31,
+      "margin": 455
+    },
+    {
+      "date": "2025-01-03",
+      "region": "APAC",
+      "channel": "Direct",
+      "revenue": 1660,
+      "orders": 29,
+      "margin": 401
+    }
+  ]
+}
+```
+
+Top-level arrays also work:
+
+```json
+[
+  { "date": "2025-01-01", "region": "EU", "revenue": 1200, "orders": 24 },
+  { "date": "2025-01-02", "region": "US", "revenue": 1800, "orders": 31 },
+  { "date": "2025-01-03", "region": "APAC", "revenue": 1660, "orders": 29 }
+]
+```
+
 ## Example Code
 
 ### Launch a specific stack
@@ -264,26 +266,14 @@ cd .\flask
 .\.venv\Scripts\python.exe app.py
 ```
 
-## How To Use The App
-
-1. Launch the stack you want to explore.
-2. Click `Load sample` to open the shared sales dataset instantly.
-3. Click `Load JSON file` or `Open JSON file` to load your own file.
-4. Review the KPI cards to confirm row and field counts.
-5. Check the detected field tags to see how the parser classified your data.
-6. Read the numeric summary to understand averages, mins, and maxes.
-7. Use the quick charts for a fast first pass.
-8. Scroll to the Apex gallery to explore the same data through multiple chart families.
-9. Use the search box in the data explorer to inspect matching rows.
-
 ## JSON Shape Expectations
 
 The parser is flexible, but the smoothest path is:
 
-- A top-level array of objects
-- Or a top-level object containing one array of objects
-- Numeric fields for metrics and chart values
-- Category or date-like fields for grouping and trend views
+- A top-level array of objects.
+- Or a top-level object containing one array of objects.
+- Numeric fields for metrics and chart values.
+- Category or date-like fields for grouping and trend views.
 
 Examples that work well:
 
@@ -305,7 +295,7 @@ Examples that work well:
 
 ## Shared Data
 
-The repo includes a shared sample dataset used by every implementation:
+The repository includes a shared sample dataset used by every implementation:
 
 ```text
 shared/sample-data/sales.json
@@ -336,41 +326,42 @@ jsondash/
 │   └── MainWindow.xaml
 ├── .gitignore
 ├── launch.ps1
+├── LICENSE
 └── README.md
 ```
 
 ## Architecture Notes
 
-### Shared analysis idea
+### Shared analysis flow
 
 Every stack follows the same product logic:
 
-- find the active dataset
-- inspect the keys
-- infer which keys are numeric, categorical, and date-like
-- build summary metrics
-- create lightweight trend/breakdown charts
-- feed a larger chart gallery from the inferred structure
+- Find the active dataset.
+- Inspect the available keys.
+- Infer which keys are numeric, categorical, and date-like.
+- Build summary metrics.
+- Create lightweight trend and breakdown charts.
+- Feed a larger chart gallery from the inferred structure.
 
-### UI shape
+### Shared UI shape
 
 Every implementation is organized around the same flow:
 
-- hero and source selection
+- Hero and source selection
 - KPI row
-- field scan and numeric summary
-- quick charts
-- full Apex gallery
-- searchable row explorer
+- Field scan and numeric summary
+- Quick charts
+- Full Apex gallery
+- Searchable row explorer
 
 ### Why four stacks
 
-This repo is useful when you need to:
+This repository is useful when you need to:
 
-- compare frontend and desktop delivery approaches
-- run the same product in different environments
-- benchmark how fast a concept can move across frameworks
-- choose the implementation style that best fits a team or deployment target
+- Compare frontend and desktop delivery approaches.
+- Run the same product in different environments.
+- Benchmark how fast a concept can move across frameworks.
+- Choose the implementation style that best fits a team or deployment target.
 
 ## Verification
 
@@ -383,8 +374,8 @@ Verified locally during setup:
 
 ## Publishing Notes
 
-- `node_modules`, virtual environments, build output, logs, and editor-only folders are excluded through `.gitignore`
-- The repo is intended to publish only source, shared data, launcher scripts, assets, and public documentation
+- `node_modules`, virtual environments, build output, logs, and editor-only folders are excluded through `.gitignore`.
+- The repository is intended to publish only source, shared data, launcher scripts, assets, and public documentation.
 
 ## License
 
