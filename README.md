@@ -1,17 +1,19 @@
 # jsondash
 
-`jsondash` turns raw JSON into a polished dashboard with four separate implementations:
+`jsondash` is a multi-stack analytics application that turns raw JSON into a structured, readable dashboard. The purpose of the project is to make JSON-based reporting easier: load a file, detect its shape automatically, summarize the important fields, and present the result through KPI cards, trend views, category breakdowns, and a broad chart library.
 
-- React
-- Angular
-- Flask
-- WPF
+This repository includes the same product implemented with the following technologies:
 
-Each stack can load a local JSON file, restore the shared sample dataset, infer schema automatically, surface KPI cards, summarize numeric metrics, render quick comparison charts, show a full ApexCharts gallery, and keep the source rows searchable in one screen.
+- React with TypeScript
+- Angular with TypeScript
+- Flask with Python, HTML, CSS, and JavaScript
+- WPF with C# and XAML
+
+Each implementation can load a local JSON file, restore the shared sample dataset, infer schema automatically, surface KPI cards, summarize numeric metrics, render quick comparison charts, show a full ApexCharts gallery, and keep the source rows searchable in one screen.
 
 ## Preview
 
-The previews below were captured in Chrome against the local demos using the shared sample dataset.
+The previews below were captured in Chrome from local application runs using the shared sample dataset.
 
 ![Angular Apex gallery preview](docs/assets/angular-apex-gallery.png)
 
@@ -19,11 +21,11 @@ The previews below were captured in Chrome against the local demos using the sha
 
 ## What You Get
 
-- One product idea implemented in four different stacks
+- One analytics product implemented in four different stacks
 - A single launcher script for quick local switching
 - Shared sample data used by every implementation
 - Full chart-family coverage through the Apex gallery
-- A clean starting point for internal analytics tools, client demos, and dashboard prototypes
+- A clean starting point for internal reporting tools, operational dashboards, and JSON-driven analytics work
 
 ## Stacks
 
@@ -37,7 +39,7 @@ The previews below were captured in Chrome against the local demos using the sha
 
 - Built with Angular standalone components
 - Uses `ng-apexcharts` + `apexcharts`
-- Includes the most complete visual demo and the live-demo script
+- Includes the richest ApexCharts setup and a dedicated Angular start script
 
 ### Flask
 
@@ -49,7 +51,7 @@ The previews below were captured in Chrome against the local demos using the sha
 
 - Native Windows desktop app built with WPF
 - Keeps native KPI, summary, and table views
-- Embeds a live Apex gallery surface inside the desktop window for full chart-family parity
+- Embeds an Apex gallery surface inside the desktop window for full chart-family parity
 
 ## Features
 
@@ -371,7 +373,7 @@ Every implementation is organized around the same flow:
 This repo is useful when you need to:
 
 - compare frontend and desktop delivery approaches
-- demo the same product in different environments
+- run the same product in different environments
 - benchmark how fast a concept can move across frameworks
 - choose the implementation style that best fits a team or deployment target
 
