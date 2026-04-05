@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>jsondash Flask</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero panel">
+        <div class="hero-copy">
+          <span class="eyebrow">Flask implementation</span>
+          <h1>Server-rendered JSON dashboards for quick internal analysis.</h1>
+          <p>
+            Load a file from your machine, restore the shared sample, and review inferred charts,
+            field types, a full ApexCharts gallery, and searchable rows without any frontend setup.
+          </p>
+          <div class="framework-list">
+            <span>React</span>
+            <span>Angular</span>
+            <span class="active-chip">Flask</span>
+            <span>WPF</span>
+          </div>
+        </div>
+
+        <aside class="source-card">
+          <span class="eyebrow">Source</span>
+          <strong>{{ source_label }}</strong>
+          <p>{{ message }}</p>
+          <div class="actions">
+            <form method="post" enctype="multipart/form-data" class="inline-form">
+              <label class="action-button accent">
+                Load JSON file
+                <input type="file" name="json_file" accept=".json,application/json" hidden onchange="this.form.submit()" />
+              </label>
+            </form>
+            <form method="post" class="inline-form">
+              <input type="hidden" name="action" value="sample" />
+              <button class="action-button subtle" type="submit">Load sample</button>
+            </form>
+          </div>
+          {% if error %}
+          <p class="error-text">{{ error }}</p>
+          {% endif %}
+        </aside>
+      </section>
+
+      <section class="kpi-grid">
+        <article class="kpi-card">
+          <span class="eyebrow">Dataset</span>
+          <strong>{{ dashboard.datasetName }}</strong>
+        </article>
+        <article class="kpi-card">
+          <span class="eyebrow">Rows</span>
+          <strong>{{ dashboard.rowCount }}</strong>
+        </article>
+        <article class="kpi-card">
+          <span class="eyebrow">Numeric fields</span>
+          <strong>{{ dashboard.numericKeys|length }}</strong>
+        </article>
+        <article class="kpi-card">
+          <span class="eyebrow">Category fields</span>
+          <strong>{{ dashboard.categoricalKeys|length }}</strong>
+        </article>
+      </section>
+
+      <section class="summary-grid">
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">Field scan</span>
+              <h3>Automatic structure detection</h3>
+            </div>
+          </div>
+          <div class="tag-group">
+            {% for key in dashboard.numericKeys %}
+            <span class="tag">Numeric: {{ key }}</span>
+            {% endfor %}
+            {% for key in dashboard.categoricalKeys %}
+            <span class="tag">Category: {{ key }}</span>
+            {% endfor %}
+            {% for key in dashboard.dateKeys %}
+            <span class="tag">Date: {{ key }}</span>
+            {% endfor %}
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">Numeric summary</span>
+              <h3>Fast read on the metrics</h3>
+            </div>
+          </div>
+          <div class="stats-list">
+            {% if dashboard.summary %}
+              {% for item in dashboard.summary %}
+              <div class="stat-row">
+                <div>
+                  <strong>{{ item.label }}</strong>
+                  <span>Avg {{ item.avg }}</span>
+                </div>
+                <div>
+                  <span>Min {{ item.min }}</span>
+                  <span>Max {{ item.max }}</span>
+                </div>
+              </div>
+              {% endfor %}
+            {% else %}
+              <p class="muted-text">No numeric fields were detected in the current dataset.</p>
+            {% endif %}
+          </div>
+        </article>
+      </section>
+
+      <section class="chart-grid">
+        {% if dashboard.charts %}
+          {% for chart in dashboard.charts %}
+          <article class="panel chart-panel">
+            <div class="panel-heading">
+              <div>
+                <span class="eyebrow">{{ "Trend" if chart.type == "line" else "Breakdown" }}</span>
+                <h3>{{ chart.title }}</h3>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="chart-{{ loop.index0 }}"></canvas>
+            </div>
+          </article>
+          {% endfor %}
+        {% else %}
+          <article class="panel">
+            <span class="eyebrow">Charts</span>
+            <h3>No chartable fields were detected.</h3>
+          </article>
+        {% endif %}
+      </section>
+
+      <section class="panel apex-lab">
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">Apex gallery</span>
+            <h3>All major Apex chart families in one live demo</h3>
+          </div>
+          <span class="meta-chip" id="apexGalleryCount">16 chart types</span>
+        </div>
+
+        <p class="gallery-copy">
+          Same dataset, sixteen visual languages. Use this section as a live ApexCharts reference
+          for composition, comparison, distribution, correlation, range, and hierarchy patterns.
+        </p>
+
+        <div class="apex-gallery-grid" id="apexGallery"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">Data explorer</span>
+            <h3>Search and inspect the source rows</h3>
+          </div>
+          <span class="meta-chip"><span id="rowCount"></span> visible rows</span>
+        </div>
+
+        <div class="table-toolbar">
+          <input
+            class="search-input"
+            id="tableSearch"
+            type="text"
+            placeholder="Search by any column value" />
+        </div>
+
+        <div class="table-shell">
+          <table>
+            <thead>
+              <tr>
+                {% for key in dashboard['keys'] %}
+                <th>{{ key }}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script id="dashboard-json" type="application/json">{{ dashboard | tojson }}</script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="{{ url_for('static', filename='apex-gallery.js') }}"></script>
+    <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+  </body>
+  </html>

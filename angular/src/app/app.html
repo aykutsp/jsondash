@@ -1,0 +1,350 @@
+<main class="app-shell">
+  <section class="hero panel">
+    <div class="hero-copy">
+      <span class="eyebrow">Angular implementation</span>
+      <h1>From raw JSON to a decision-ready dashboard in one screen.</h1>
+      <p>
+        This live demo lets you load a local file, inspect a shared sample dataset, and explore
+        the full ApexCharts gallery including line, area, bar, pie, donut, radial, scatter,
+        bubble, heatmap, candlestick, box plot, radar, polar area, range bar, range area, and
+        treemap views without leaving the page.
+      </p>
+      <div class="framework-list">
+        <span>React</span>
+        <span class="active-chip">Angular</span>
+        <span>Flask</span>
+        <span>WPF</span>
+      </div>
+    </div>
+
+    <aside class="source-card">
+      <span class="eyebrow">Source</span>
+      <strong>{{ sourceLabel() }}</strong>
+      <p>{{ message() }}</p>
+      <div class="actions">
+        <label class="action-button accent">
+          Load JSON file
+          <input type="file" accept=".json,application/json" hidden (change)="handleFileChange($event)" />
+        </label>
+        <button class="action-button subtle" type="button" (click)="loadSample()">
+          Load sample
+        </button>
+      </div>
+      @if (error()) {
+        <p class="error-text">{{ error() }}</p>
+      }
+    </aside>
+  </section>
+
+  <section class="kpi-grid">
+    <article class="kpi-card">
+      <span class="eyebrow">Dataset</span>
+      <strong>{{ dashboard().datasetName }}</strong>
+    </article>
+    <article class="kpi-card">
+      <span class="eyebrow">Rows</span>
+      <strong>{{ dashboard().rowCount }}</strong>
+    </article>
+    <article class="kpi-card">
+      <span class="eyebrow">Numeric fields</span>
+      <strong>{{ dashboard().numericKeys.length }}</strong>
+    </article>
+    <article class="kpi-card">
+      <span class="eyebrow">Category fields</span>
+      <strong>{{ dashboard().categoricalKeys.length }}</strong>
+    </article>
+  </section>
+
+  <section class="summary-grid">
+    <article class="panel">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow">Field scan</span>
+          <h3>Automatic structure detection</h3>
+        </div>
+      </div>
+      <div class="tag-group">
+        @for (key of dashboard().numericKeys; track key) {
+          <span class="tag">Numeric: {{ key }}</span>
+        }
+        @for (key of dashboard().categoricalKeys; track key) {
+          <span class="tag">Category: {{ key }}</span>
+        }
+        @for (key of dashboard().dateKeys; track key) {
+          <span class="tag">Date: {{ key }}</span>
+        }
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow">Numeric summary</span>
+          <h3>Fast read on the metrics</h3>
+        </div>
+      </div>
+      <div class="stats-list">
+        @if (dashboard().summary.length) {
+          @for (item of dashboard().summary; track item.key) {
+            <div class="stat-row">
+              <div>
+                <strong>{{ item.label }}</strong>
+                <span>Avg {{ item.avg }}</span>
+              </div>
+              <div>
+                <span>Min {{ item.min }}</span>
+                <span>Max {{ item.max }}</span>
+              </div>
+            </div>
+          }
+        } @else {
+          <p class="muted-text">No numeric fields were detected in the current dataset.</p>
+        }
+      </div>
+    </article>
+  </section>
+
+  <section class="visual-showcase">
+    <article class="panel gauge-stage">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow">Gauge</span>
+          <h3>Health meters</h3>
+        </div>
+      </div>
+      <div class="gauge-grid">
+        @for (gauge of gaugeCards(); track gauge.id) {
+          <div class="gauge-card">
+            <apx-chart
+              class="apex-host gauge-host"
+              [series]="gauge.chart.series"
+              [chart]="gauge.chart.chart"
+              [labels]="gauge.chart.labels"
+              [plotOptions]="gauge.chart.plotOptions"
+              [fill]="gauge.chart.fill"
+              [stroke]="gauge.chart.stroke"
+              [dataLabels]="gauge.chart.dataLabels"
+              [states]="gauge.chart.states">
+            </apx-chart>
+            <div class="gauge-meta">
+              <span class="eyebrow">{{ gauge.label }}</span>
+              <p>{{ gauge.note }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </article>
+
+    @if (spotlightTrend(); as featureTrend) {
+      <article class="panel feature-card {{ featureTrend.accentClass }}">
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">{{ featureTrend.badge }}</span>
+            <h3>{{ featureTrend.title }}</h3>
+          </div>
+        </div>
+        <p class="feature-copy">{{ featureTrend.subtitle }}</p>
+        <div class="chart-shell chart-shell-dark">
+          <apx-chart
+            class="apex-host feature-host"
+            [series]="featureTrend.chart.series"
+            [chart]="featureTrend.chart.chart"
+            [colors]="featureTrend.chart.colors"
+            [dataLabels]="featureTrend.chart.dataLabels"
+            [stroke]="featureTrend.chart.stroke"
+            [fill]="featureTrend.chart.fill"
+            [tooltip]="featureTrend.chart.tooltip"
+            [plotOptions]="featureTrend.chart.plotOptions"
+            [xaxis]="featureTrend.chart.xaxis"
+            [yaxis]="featureTrend.chart.yaxis"
+            [grid]="featureTrend.chart.grid"
+            [markers]="featureTrend.chart.markers"
+            [legend]="featureTrend.chart.legend"
+            [states]="featureTrend.chart.states">
+          </apx-chart>
+        </div>
+        <div class="stat-pill-grid">
+          @for (item of featureTrend.stats; track item.label) {
+            <div class="stat-pill">
+              <span>{{ item.label }}</span>
+              <strong>{{ item.value }}</strong>
+            </div>
+          }
+        </div>
+      </article>
+    }
+
+    @if (prismBreakdown(); as prism) {
+      <article class="panel feature-card {{ prism.accentClass }}">
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">{{ prism.badge }}</span>
+            <h3>{{ prism.title }}</h3>
+          </div>
+        </div>
+        <p class="feature-copy">{{ prism.subtitle }}</p>
+        <div class="chart-shell chart-shell-light">
+          <apx-chart
+            class="apex-host feature-host"
+            [series]="prism.chart.series"
+            [chart]="prism.chart.chart"
+            [colors]="prism.chart.colors"
+            [dataLabels]="prism.chart.dataLabels"
+            [stroke]="prism.chart.stroke"
+            [fill]="prism.chart.fill"
+            [tooltip]="prism.chart.tooltip"
+            [plotOptions]="prism.chart.plotOptions"
+            [xaxis]="prism.chart.xaxis"
+            [yaxis]="prism.chart.yaxis"
+            [grid]="prism.chart.grid"
+            [markers]="prism.chart.markers"
+            [legend]="prism.chart.legend"
+            [states]="prism.chart.states">
+          </apx-chart>
+        </div>
+        <div class="stat-pill-grid compact">
+          @for (item of prism.stats; track item.label) {
+            <div class="stat-pill">
+              <span>{{ item.label }}</span>
+              <strong>{{ item.value }}</strong>
+            </div>
+          }
+        </div>
+      </article>
+    }
+  </section>
+
+  @if (secondaryCharts().length) {
+    <section class="chart-grid immersive-grid">
+      @for (chart of secondaryCharts(); track chart.id) {
+        <article class="panel feature-card mini {{ chart.accentClass }}">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">{{ chart.badge }}</span>
+              <h3>{{ chart.title }}</h3>
+            </div>
+          </div>
+          <p class="feature-copy">{{ chart.subtitle }}</p>
+          <div class="chart-shell chart-shell-muted">
+            <apx-chart
+              class="apex-host compact-host"
+              [series]="chart.chart.series"
+              [chart]="chart.chart.chart"
+              [colors]="chart.chart.colors"
+              [dataLabels]="chart.chart.dataLabels"
+              [stroke]="chart.chart.stroke"
+              [fill]="chart.chart.fill"
+              [tooltip]="chart.chart.tooltip"
+              [plotOptions]="chart.chart.plotOptions"
+              [xaxis]="chart.chart.xaxis"
+              [yaxis]="chart.chart.yaxis"
+              [grid]="chart.chart.grid"
+              [markers]="chart.chart.markers"
+              [legend]="chart.chart.legend"
+              [states]="chart.chart.states">
+            </apx-chart>
+          </div>
+          <div class="stat-pill-grid compact">
+            @for (item of chart.stats; track item.label) {
+              <div class="stat-pill">
+                <span>{{ item.label }}</span>
+                <strong>{{ item.value }}</strong>
+              </div>
+            }
+          </div>
+        </article>
+      }
+    </section>
+  }
+
+  <section class="panel apex-lab">
+    <div class="panel-heading">
+      <div>
+        <span class="eyebrow">Apex gallery</span>
+        <h3>All major Apex chart families in one live demo</h3>
+      </div>
+      <span class="meta-chip">{{ apexGallery().length }} chart types</span>
+    </div>
+
+    <p class="gallery-copy">
+      Same dataset, sixteen visual languages. Use this section as a live ApexCharts reference for
+      composition, comparison, distribution, correlation, range, and hierarchy patterns.
+    </p>
+
+    <div class="apex-gallery-grid">
+      @for (card of apexGallery(); track card.id) {
+        <article class="gallery-card {{ card.skin }}">
+          <div class="gallery-header">
+            <div>
+              <span class="eyebrow">{{ card.badge }}</span>
+              <h4>{{ card.title }}</h4>
+            </div>
+            <span class="mini-chip">{{ card.note }}</span>
+          </div>
+          <p class="gallery-subtitle">{{ card.subtitle }}</p>
+          <div class="gallery-shell">
+            <apx-chart
+              class="apex-host gallery-host"
+              [series]="$any(card.chart.series)"
+              [chart]="$any(card.chart.chart)"
+              [colors]="$any(card.chart.colors)"
+              [labels]="$any(card.chart.labels)"
+              [dataLabels]="$any(card.chart.dataLabels)"
+              [stroke]="$any(card.chart.stroke)"
+              [fill]="$any(card.chart.fill)"
+              [tooltip]="$any(card.chart.tooltip)"
+              [plotOptions]="$any(card.chart.plotOptions)"
+              [xaxis]="$any(card.chart.xaxis)"
+              [yaxis]="$any(card.chart.yaxis)"
+              [grid]="$any(card.chart.grid)"
+              [markers]="$any(card.chart.markers)"
+              [legend]="$any(card.chart.legend)"
+              [states]="$any(card.chart.states)">
+            </apx-chart>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <span class="eyebrow">Data explorer</span>
+        <h3>Search and inspect the source rows</h3>
+      </div>
+      <span class="meta-chip">{{ visibleRows().length }} visible rows</span>
+    </div>
+
+    <div class="table-toolbar">
+      <input
+        class="search-input"
+        type="text"
+        name="searchQuery"
+        placeholder="Search by any column value"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event)" />
+    </div>
+
+    <div class="table-shell">
+      <table>
+        <thead>
+          <tr>
+            @for (key of dashboard().keys; track key) {
+              <th>{{ key }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of visibleRows().slice(0, 300); track $index) {
+            <tr>
+              @for (key of dashboard().keys; track key) {
+                <td>{{ row[key] ?? '' }}</td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
